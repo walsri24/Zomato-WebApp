@@ -26,24 +26,22 @@ def haversine_distance(coords1, coords2):
 def serialize_doc(doc):
     """Convert MongoDB document to JSON serializable format."""
     if doc is not None:
-        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+        doc['_id'] = str(doc['_id']) 
     return doc
 
 @app.route('/restaurant/<restaurant_ID>', methods=['GET'])
 def get_restaurant_by_id(restaurant_ID):
-    # Try to cast the Restaurant ID to an integer if it's stored as a number
     try:
         restaurant_ID = int(restaurant_ID)
     except ValueError:
-        pass  # If it's not a number, leave it as a string
+        pass
 
-    # Query the collection using the Restaurant ID
+
     restaurant = collection.find_one({
         "Restaurant ID": restaurant_ID
     })
 
     if restaurant:
-        # Convert ObjectId to string for JSON serialization
         restaurant['_id'] = str(restaurant['_id'])
         restaurant['Restaurant ID'] = str(restaurant.get('Restaurant ID'))
         return jsonify(restaurant), 200
@@ -92,7 +90,6 @@ def get_nearby_restaurants():
                 )
 
                 if distance <= radius_in_meters:
-                    # Convert ObjectId to string for JSON serialization
                     restaurant['_id'] = str(restaurant['_id'])
                     restaurants_within_radius.append(restaurant)
 
