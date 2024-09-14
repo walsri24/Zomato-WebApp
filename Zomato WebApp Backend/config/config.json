@@ -1,0 +1,5 @@
+{
+    "mongodb":{
+        "uri":"mongodb+srv://anandprajwal123:1q2w3e4r5t6y@cluster0.lzsnd.mongodb.net/"
+    }
+}
