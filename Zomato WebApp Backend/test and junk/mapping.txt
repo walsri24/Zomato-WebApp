@@ -1,0 +1,1 @@
+image --------- by(tensor) ----- predicted ice cream

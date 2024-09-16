@@ -1,0 +1,62 @@
+/* ImageSearch.css */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  input[type="file"] {
+    display: block;
+    margin: 20px 0;
+  }
+  
+  p {
+    font-size: 16px;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .results {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 800px;
+    width: 100%;
+  }
+  
+  .results h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .results p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .results img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
