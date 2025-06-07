@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zomato Restaurant Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .input-field {
+            margin-bottom: 20px;
+        }
+        .input-field label {
+            font-weight: bold;
+        }
+        .input-field input, .input-field button {
+            padding: 10px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        #results {
+            margin-top: 30px;
+        }
+        .restaurant {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Zomato Restaurant Finder</h1>
+    <div class="container">
+        <div id="restaurantById">
+            <h2>Search Restaurant by ID</h2>
+            <div class="input-field">
+                <label for="restaurantId">Restaurant ID:</label>
+                <input type="text" id="restaurantId" placeholder="Enter Restaurant ID">
+                <button onclick="searchRestaurantById()">Search</button>
+            </div>
+        </div>
+
+        <div id="nearbyRestaurants">
+            <h2>Search Nearby Restaurants</h2>
+            <div class="input-field">
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" placeholder="Enter Latitude">
+            </div>
+            <div class="input-field">
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" placeholder="Enter Longitude">
+            </div>
+            <div class="input-field">
+                <label for="radius">Radius (in km):</label>
+                <input type="text" id="radius" placeholder="Enter Radius">
+                <button onclick="searchNearbyRestaurants()">Search</button>
+            </div>
+        </div>
+
+        <div id="uploadImage">
+            <h2>Upload Image to Search Restaurants</h2>
+            <div class="input-field">
+                <input type="file" id="imageUpload">
+                <button onclick="uploadImage()">Upload</button>
+            </div>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Base API URL
+        const apiBaseUrl = 'http://localhost:5000';
+
+        // Search Restaurant by ID
+        function searchRestaurantById() {
+            const restaurantId = document.getElementById('restaurantId').value;
+            fetch(`${apiBaseUrl}/restaurant/${restaurantId}`)
+                .then(response => response.json())
+                .then(data => displayResults([data]))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Search Nearby Restaurants
+        function searchNearbyRestaurants() {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+            const radius = document.getElementById('radius').value;
+            fetch(`${apiBaseUrl}/restaurants/near?lat=${lat}&lng=${lng}&radius=${radius}`)
+                .then(response => response.json())
+                .then(data => displayResults(data))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Upload Image
+        function uploadImage() {
+            const imageUpload = document.getElementById('imageUpload').files[0];
+            const formData = new FormData();
+            formData.append('image', imageUpload);
+
+            fetch(`${apiBaseUrl}/restaurants/image-upload`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => displayResults(data))
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Display Results
+        function displayResults(restaurants) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            if (!restaurants || restaurants.length === 0) {
+                resultsDiv.innerHTML = '<p>No results found.</p>';
+                return;
+            }
+
+            restaurants.forEach(restaurant => {
+                const restaurantDiv = document.createElement('div');
+                restaurantDiv.classList.add('restaurant');
+                restaurantDiv.innerHTML = `
+                    <h3>${restaurant['Restaurant Name']}</h3>
+                    <p><strong>Address:</strong> ${restaurant.Address}</p>
+                    <p><strong>Cuisines:</strong> ${restaurant.Cuisines}</p>
+                    <p><strong>Rating:</strong> ${restaurant['Aggregate rating']} (${restaurant['Rating text']})</p>
+                    <img src="${restaurant.featured_image}" alt="${restaurant['Restaurant Name']}" style="width: 100%; height: auto;">
+                `;
+                resultsDiv.appendChild(restaurantDiv);
+            });
+        }
+    </script>
+
+</body>
+</html>
